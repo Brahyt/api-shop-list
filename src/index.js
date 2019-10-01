@@ -7,7 +7,7 @@ import api from './api';
 
 import shoppingList from './shopping-list';
 
-const main = function () {
+const initStore = function(){
   api.getItems()
     .then(res => {
       res.forEach(x => {
@@ -16,6 +16,13 @@ const main = function () {
       shoppingList.render();
     })
   shoppingList.bindEventListeners();
+}
+
+
+
+
+const main = function () {
+  initStore()
 //TESTING
 
 //TESTING DONE

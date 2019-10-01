@@ -42,8 +42,6 @@ const deleteItem = function (id){
   return apiFetcher(`${BASE_URL}/items/${id}`, 'DELETE')
 }
 
-
-
 export default {
   getItems,
   createItem,

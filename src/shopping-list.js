@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import api from './api'
+import api from './api';
 import store from './store';
 
 const generateItemElement = function (item) {
@@ -26,22 +26,17 @@ const generateItemElement = function (item) {
     </li>`;
 };
 
-const generateShoppingItemsString = function (shoppingList) {
+const generateShoppingItemsString = function(shoppingList) {
   const items = shoppingList.map((item) => generateItemElement(item));
   return items.join('');
 };
 
 const render = function () {
-  // Filter item list if store prop is true by item.checked === false
   let items = [...store.items];
   if (store.hideCheckedItems) {
     items = items.filter(item => !item.checked);
   }
-
-  // render the shopping list in the DOM
   const shoppingListItemsString = generateShoppingItemsString(items);
-
-  // insert that HTML into the DOM
   $('.js-shopping-list').html(shoppingListItemsString);
 };
 
