@@ -1,7 +1,6 @@
 import $ from 'jquery';
-
+import api from './api'
 import store from './store';
-import item from './item';
 
 const generateItemElement = function (item) {
   let itemTitle = `<span class="shopping-item shopping-item__checked">${item.name}</span>`;
@@ -51,8 +50,11 @@ const handleNewItemSubmit = function () {
     event.preventDefault();
     const newItemName = $('.js-shopping-list-entry').val();
     $('.js-shopping-list-entry').val('');
-    store.addItem(newItemName);
-    render();
+    api.createItem(newItemName)
+      .then((newItem) => {
+        store.addItem(newItem)
+        render()
+      });
   });
 };
 
@@ -68,9 +70,12 @@ const handleDeleteItemClicked = function () {
     // get the index of the item in store.items
     const id = getItemIdFromElement(event.currentTarget);
     // delete the item
-    store.findAndDelete(id);
+    api.deleteItem(id)
+      .then(() => {
+        store.findAndDelete(id);
+        render();
+      })
     // render the updated shopping list
-    render();
   });
 };
 
@@ -79,16 +84,25 @@ const handleEditShoppingItemSubmit = function () {
     event.preventDefault();
     const id = getItemIdFromElement(event.currentTarget);
     const itemName = $(event.currentTarget).find('.shopping-item').val();
-    store.findAndUpdateName(id, itemName);
-    render();
+    console.log(id)
+    console.log(itemName)    
+    api.updateItem(id, {name: itemName})
+      .then(() => {
+        store.findAndUpdate(id, {name: itemName});
+        render();
+      })
   });
 };
 
 const handleItemCheckClicked = function () {
   $('.js-shopping-list').on('click', '.js-item-toggle', event => {
     const id = getItemIdFromElement(event.currentTarget);
-    store.findAndToggleChecked(id);
-    render();
+    const itemChecked = store.findById(id)
+    api.updateItem(id, {checked: !itemChecked.checked})
+      .then(() => {
+        store.findAndUpdate(id, {checked: !itemChecked.checked});
+        render();
+      })
   });
 };
 
